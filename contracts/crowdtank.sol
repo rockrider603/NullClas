@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+// Review info: naming casing wrong
 contract crowdtank{
     //struct used to store all project details
     address public admin; // Admin address
@@ -83,6 +84,8 @@ contract crowdtank{
         Commissions+=project.Commission;
         uint256 Contribution = (95 * Contributor[projectId][msg.sender]) / scalingFactor;
         project.amountraised+=Contribution;
+
+        // Review infor:wrong logic,amount is not sent to creator,creator withdraws the funds as per will
         if (project.amountraised< project.FundingGoal){
             
             payable(project.creator).transfer(Contribution);
@@ -101,6 +104,7 @@ contract crowdtank{
     }
     function HowMuchFundsRequired(uint projectId) external view returns(uint){
         Project storage project=project[projectId];
+        // Review info: wrong logic, amountRaised==fundingGoal
         require(project.amountraised<=project.FundingGoal,"0");
         uint MoneyRemaining=(project.FundingGoal)-(project.amountraised);
         return (MoneyRemaining);
